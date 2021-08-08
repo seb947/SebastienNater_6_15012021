@@ -51,3 +51,39 @@ exports.getAllStuff = (req, res, next) => {
     .catch((error) => { res.status(400).json({ error: error });
     });
 };
+
+exports.isLiked = (req, res, next) => {
+  const userId = req.body.userId
+
+  switch (req.body.like)
+   {
+    case 0: 
+      Thing.findOne({ _id: req.params.id })
+        .then(thing => {
+          const liked = thing.usersLiked.find(element => element == userId);  
+          const disliked = thing.usersDisliked.find(element => element == userId);
+          if (liked) {
+            Thing.updateOne({_id: req.params.id}, {$pull: {usersLiked: userId}, $inc: {likes: -1}})
+              .then(() => res.status(201).json({ message: "like removed" }))
+              .catch(error => res.status(400).json({ error }));
+          } else if (disliked) {
+            Thing.updateOne({_id: req.params.id}, {$pull: {usersDisliked: userId}, $inc: {dislikes: -1}})
+              .then(() => res.status(201).json({ message: "dislike removed" }))
+              .catch(error => res.status(400).json({ error }));
+          }
+      });
+      break;
+    
+    case 1: 
+      Thing.updateOne({_id: req.params.id}, {$push: {usersLiked: userId}, $inc: {likes: 1}})
+        .then(() => res.status(201).json({ message: "liked" }))
+        .catch(error => res.status(400).json({ error }));
+      break;
+
+    case -1: 
+      Thing.updateOne({_id: req.params.id}, {$push: {usersDisliked: userId}, $inc: {dislikes: 1}})
+        .then(() => res.status(201).json({ message: "disliked" }))
+        .catch(error => res.status(400).json({ error }));
+    break;    
+    }
+}
