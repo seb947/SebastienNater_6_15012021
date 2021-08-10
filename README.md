@@ -20,7 +20,7 @@ password-validator -> npm install password-validator
 
 dotenv -> npm install dotenv
 
--2) créer un fichier ".env" dans lequel:
+-2) créer un fichier ".env" dans le backend dans lequel:
 
 DB_CREDENTIALS = votre string de connexion mongoDB
 
