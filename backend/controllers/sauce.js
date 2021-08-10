@@ -2,7 +2,6 @@ const Thing = require('../models/thing');
 const fs = require('fs');
 
 exports.createThing = (req, res, next) => {
-  console.log(req.body.sauce);
   const thingObject = JSON.parse(req.body.sauce);
   const thing = new Thing({
     ...thingObject,
